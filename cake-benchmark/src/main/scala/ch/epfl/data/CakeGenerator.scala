@@ -8,10 +8,11 @@ object CakeGenerator {
   case object Case2 extends Scenario
   case object Case3 extends Scenario
   case object Case4 extends Scenario
-  val scenario: Scenario = Case4
+  val scenario: Scenario = Case1
   val folderObject = new File("generated")
   val N = 500
   val NA = 100 * 2
+  val NA_MAX = 10
   val N_FIELDS = 80
   def main(args: Array[String]) {
     implicit val out = new StringBuilder
@@ -63,11 +64,18 @@ object CakeGenerator {
   }
 
   def appMethodGenerate(implicit out: StringBuilder) {
-    out ++= "def app = "
-    for (i <- 0 to NA) {
-      if (i != 0)
-        out ++= " + "
-      out ++= s"x1_$i"
+    for (f <- 1 to N_FIELDS) {
+      out ++= s"def app_$f = {"
+      for (j <- 0 to N / NA - 1) {
+        for (i <- 0 to NA_MAX) {
+          if (i != 0)
+            out ++= " + "
+          val index = j * NA + i
+          out ++= s"x${f}_$index"
+        }
+        out ++= "\n"
+      }
+      out ++= "()\n}\n"
     }
   }
 
